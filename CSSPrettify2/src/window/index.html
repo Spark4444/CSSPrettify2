@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSSPrettify2</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/x-icon" href="../img/app.ico">
+</head>
+<body>
+  <div class="wrap">
+    <h2>Note that this prettifier removes all comments from your CSS.</h2>
+    <h2>(You can drop your CSS files anywhere on this window)</h2>
+
+    <label for="fileInput" class="fileLabel">Select a CSS file.</label>
+    <input type="file" id="fileInput"/>
+
+    <h2>OR</h2>
+
+    <input type="text" id="cssInput" placeholder="Paste your CSS here"/>
+
+    <div class="checkBoxWrap">
+        <input type="checkbox" id="checkbox1" checked/>
+        <label for="checkbox1">Sort attribute names in alphabetical order</label>
+    </div>
+
+    <div class="checkBoxWrap">
+        <input type="checkbox" id="checkbox2" checked/>
+        <label for="checkbox2">Sort selector names in alphabetical order</label>
+    </div>
+
+    <div class="checkBoxWrap">
+        <input type="checkbox" id="checkbox3"  checked/>
+        <label for="checkbox3">Merge repeated rules</label>
+    </div>
+  </div>
+  <script src="js/script.js"></script>
+</body>
+</html>
