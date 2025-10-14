@@ -1,32 +1,47 @@
 const checkboxes = document.querySelectorAll("input[type=checkbox]");
 const cssInput = document.querySelector("#cssInput");
-const fileInput = document.querySelector("#fileInput");
+const fileSelectBtn = document.querySelector("#fileSelectBtn");
 
-let options = {
-    sortSelectors: true,
-    sortProperties: true,
-    mergeDuplicates: true
-};
+let optionsMap = [
+    [ "sortSelectors", true ],
+    [ "sortProperties", true ],
+    [ "mergeDuplicates", true ]
+];
 
 function copyToClipboard(text) {
+    console.log(text);
     navigator.clipboard.writeText(text).then(() => {
         alert("Copied to clipboard!");
     });
 }
 
-checkboxes.forEach(element => {
+checkboxes.forEach((element, index) => {
     element.addEventListener("change", (event) => {
-        options[Object.keys(options).find(key => key === element.name)] = event.target.checked;
+        optionsMap[index][1] = event.target.checked;
     });
 });
 
-cssInput.addEventListener("input", async (event) => {
-    const prettified = await window.electron.prettify(event.target.value, options);
-    copyToClipboard(prettified);
+document.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter" && event.target === cssInput && cssInput.value.trim() !== "") {
+        try {
+            const options = Object.fromEntries(optionsMap);
+            const prettified = await window.electron.prettify(event.target.value, options);
+            copyToClipboard(prettified);
+        } catch (error) {
+            alert(`Error prettifying CSS: ${error.message}`);
+        }
+    }
 });
 
-fileInput.addEventListener("change", async (event) => {
-    const filePath = event.target.files[0].path;
-    await window.electron.prettifyFile(filePath, options);
-    alert("Prettified file saved to the same directory with .prettified.css extension.");
+fileSelectBtn.addEventListener("click", async () => {
+    try {
+        const options = Object.fromEntries(optionsMap);
+        const result = await window.electron.prettifyFile(options);
+
+        if (result) {
+            alert(`Prettified file saved to: ${result}`);
+        }
+    } catch (error) {
+        alert(`Error selecting or processing file: ${error.message}`);
+    }
 });

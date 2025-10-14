@@ -72,7 +72,7 @@ export function filterCSS(json, options = {}) {
         }
 
         const children = item.children;
-        const sortedChildren = children.length > 0 ? filterCSS(children) : [];
+        const sortedChildren = children.length > 0 ? filterCSS(children, options) : [];
         
         filtered.push({
             [selector]: sortedAttributes,
@@ -85,7 +85,17 @@ export function filterCSS(json, options = {}) {
         filtered.sort((a, b) => {
             const selectorA = Object.keys(a)[0].toLowerCase();
             const selectorB = Object.keys(b)[0].toLowerCase();
-            return selectorA.localeCompare(selectorB);
+            
+            // Normalize selectors for comparison by removing leading special characters
+            // and other CSS-specific characters, keeping only alphanumeric characters
+            function normalizeSelector(selector) {
+                return selector.replace(/^[.#]/, '').replace(/[^a-z0-9]/g, '');
+            }
+
+            const normalizedA = normalizeSelector(selectorA);
+            const normalizedB = normalizeSelector(selectorB);
+            
+            return normalizedA.localeCompare(normalizedB);
         });
     }
 

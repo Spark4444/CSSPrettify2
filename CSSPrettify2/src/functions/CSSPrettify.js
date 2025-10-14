@@ -12,7 +12,10 @@ class CSSPrettify {
         const prettified = CSSPrettify.prettify(css, options);
         const filePathwithoutExt = filePath.replace(/\.[^/.]+$/, "");
         const newFilePath = `${filePathwithoutExt}.prettified.css`;
+
         fs.writeFileSync(newFilePath, prettified, "utf-8");
+        
+        return newFilePath;
     }
 }
 

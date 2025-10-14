@@ -1,10 +1,8 @@
-import { app, BrowserWindow, Menu, ipcMain } from "electron";
+import { app, BrowserWindow, Menu, ipcMain, dialog } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
 import squirrelStartup from "electron-squirrel-startup";
 import CSSPrettify from "./functions/CSSPrettify.js";
-
-console.log(CSSPrettify.prettify("body{color:red;} /* This is a comment */"));
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -34,15 +32,15 @@ const createWindow = () => {
 };
 
 // Remove menu bar
-const template = [
+// const template = [
 
-];
+// ];
 
-const menu = Menu.buildFromTemplate(template);
-Menu.setApplicationMenu(menu);
+// const menu = Menu.buildFromTemplate(template);
+// Menu.setApplicationMenu(menu);
 
 // IPC handlers for CSS prettification
-ipcMain.handle("prettifyCss", async (event, css, options) => {
+ipcMain.handle("prettify", async (event, css, options) => {
   try {
     return CSSPrettify.prettify(css, options);
   } catch (error) {
@@ -50,11 +48,29 @@ ipcMain.handle("prettifyCss", async (event, css, options) => {
   }
 });
 
-ipcMain.handle("prettifyFile", async (event, filePath, options) => {
+// IPC handler for opening file dialog
+ipcMain.handle("prettifyFile", async (event, options) => {
   try {
-    return CSSPrettify.prettifyFile(filePath, options);
+    // Show open file dialog
+    const result = await dialog.showOpenDialog({
+      title: "Select CSS File",
+      filters: [
+        { name: "CSS Files", extensions: ["css"] },
+        { name: "All Files", extensions: ["*"] }
+      ],
+      properties: ["openFile"]
+    });
+    
+    // If a file was selected, prettify it
+    if (!result.canceled && result.filePaths.length > 0) {
+      const cssResult = CSSPrettify.prettifyFile(result.filePaths[0], options);
+      const fileName = path.basename(cssResult);
+      return fileName;
+    }
+
+    return null;
   } catch (error) {
-    throw new Error(`Failed to prettify file: ${error.message}`);
+    throw new Error(`Failed to open file dialog: ${error.message}`);
   }
 });
 
