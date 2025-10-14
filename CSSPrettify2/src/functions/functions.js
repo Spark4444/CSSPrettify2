@@ -82,6 +82,7 @@ export function filterCSS(json, options = {}) {
 
     // Filter selectors alphabetically if option is enabled
     if (sortSelectors) {
+        // Sort all the rules alphabetically, ignoring special characters
         filtered.sort((a, b) => {
             const selectorA = Object.keys(a)[0].toLowerCase();
             const selectorB = Object.keys(b)[0].toLowerCase();
@@ -96,6 +97,18 @@ export function filterCSS(json, options = {}) {
             const normalizedB = normalizeSelector(selectorB);
             
             return normalizedA.localeCompare(normalizedB);
+        });
+
+        // Sort all the at rules to the top
+        filtered.sort((a, b) => {
+            const selectorA = Object.keys(a)[0];
+            const selectorB = Object.keys(b)[0];
+            const isAtRuleA = selectorA.startsWith("@");
+            const isAtRuleB = selectorB.startsWith("@");
+
+            if (isAtRuleA && !isAtRuleB) return -1;
+            if (!isAtRuleA && isAtRuleB) return 1;
+            return 0;
         });
     }
 

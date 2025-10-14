@@ -6,6 +6,8 @@ import CSSPrettify from "./functions/CSSPrettify.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+let dialogWindowOpen = false;
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (squirrelStartup) {
   app.quit();
@@ -51,7 +53,10 @@ ipcMain.handle("prettify", async (event, css, options) => {
 // IPC handler for opening file dialog
 ipcMain.handle("prettifyFile", async (event, options) => {
   try {
-    // Show open file dialog
+    // Show open file dialog, prevent multiple dialogs
+    if (dialogWindowOpen) return null;
+    dialogWindowOpen = true;
+    
     const result = await dialog.showOpenDialog({
       title: "Select CSS File",
       filters: [
@@ -64,15 +69,17 @@ ipcMain.handle("prettifyFile", async (event, options) => {
     // If a file was selected, prettify it
     if (!result.canceled && result.filePaths.length > 0) {
       const cssResult = CSSPrettify.prettifyFile(result.filePaths[0], options);
-      const fileName = path.basename(cssResult);
-      return fileName;
+      return cssResult;
     }
 
     return null;
   } catch (error) {
     throw new Error(`Failed to open file dialog: ${error.message}`);
+  } finally {
+    // Ensure the flag is always reset, even if an error occurs
+    dialogWindowOpen = false;
   }
-});
+}); 
 
 app.whenReady().then(() => {
   createWindow();

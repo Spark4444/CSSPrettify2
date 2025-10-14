@@ -1,63 +1,74 @@
 body {
-    background: black;
-    color: white;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: helvetica;
-    text-align: center;
-    display: flex;
     align-items: center;
-    justify-content: center;
+    background: black;
+    box-sizing: border-box;
+    color: white;
+    display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
+    font-family: helvetica;
     font-size: 1.5vw;
+    justify-content: flex-start;
+    margin: 0;
+    min-height: max-content;
+    overflow-y: scroll;
+    padding: 0;
+    text-align: center;
     user-select: none;
+    width: 100%;
+}
+
+.bottomWrap {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 20%;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.checkBoxWrap {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 31%;
+}
+
+.checkWrap {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
 }
 
 #cssInput {
     background: black;
     border: none;
     color: white;
-    outline: none;
-    margin: 3%;
     font-size: 1.5vw;
+    outline: none;
+    width: 40%;
+    text-align: center;
 }
 
 #cssInput::placeholder {
     color: gray;
-}
-
-html {
-    width: 100%;
-    height: 100%;
-}
-
-h2 {
-    font-size: 2vw;
-    margin: 0;
+    text-align: center;
 }
 
 .fileSelectButton {
-    border: 0.3vw solid white;
-    margin: 3%;
-    height: 3.5vw;
-    display: flex;
     align-items: center;
-    width: 15%;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.3s;
     background: black;
+    border: 0.3vw solid white;
     color: white;
-    font-size: 1.5vw;
+    cursor: pointer;
+    display: flex;
     font-family: helvetica;
-}
-
-.fileSelectButton:hover {
-    background: white;
-    color: black;
+    font-size: 1.5vw;
+    height: 3.5vw;
+    justify-content: center;
+    transition: 0.3s;
+    width: 15%;
 }
 
 .fileSelectButton:active {
@@ -65,33 +76,74 @@ h2 {
     color: black;
 }
 
+.fileSelectButton:hover {
+    background: white;
+    color: black;
+}
+
+h2 {
+    font-size: 2vw;
+    margin: 0;
+}
+
+html {
+    min-height: max-content;
+    width: 100%;
+}
+
 input[type="checkbox"] {
-    background: black;
     appearance: none;
+    background: black;
     border: 0.1vw solid white;
-    width: 1.5vw;
-    height: 1.5vw;
     cursor: pointer;
+    height: 1.5vw;
+    width: 1.5vw;
 }
 
 input[type="checkbox"]:checked {
     background-image: url("../img/tick.svg");
-    background-size: cover;
     background-position: center;
+    background-size: cover;
 }
 
-.checkBoxWrap {
-    display: flex;
+.middleWrap {
     align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 26%;
     justify-content: space-between;
-    width: 31%;
+    width: 100%;
+}
+
+.resultMessage {
+    align-items: center;
+    display: flex;
+    height: 30%;
+    justify-content: center;
+    width: 100%;
+    user-select: text;
+}
+
+.topTextWrap {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 20%;
+    justify-content: center;
+    width: 100%;
+    user-select: text;
 }
 
 .wrap {
-    height: 35vw;
-    width: 100%;
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    height: 100vh;
     justify-content: space-between;
+    min-height: 50vw;
+    width: 100%;
+}
+
+label {
+    user-select: text;
 }

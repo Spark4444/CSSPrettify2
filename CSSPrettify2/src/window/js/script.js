@@ -1,6 +1,7 @@
 const checkboxes = document.querySelectorAll("input[type=checkbox]");
 const cssInput = document.querySelector("#cssInput");
 const fileSelectBtn = document.querySelector("#fileSelectBtn");
+const resultMessage = document.querySelector(".resultMessage");
 
 let optionsMap = [
     [ "sortSelectors", true ],
@@ -8,10 +9,13 @@ let optionsMap = [
     [ "mergeDuplicates", true ]
 ];
 
+function showMessage(msg) {
+    resultMessage.innerHTML = msg;
+}
+
 function copyToClipboard(text) {
-    console.log(text);
     navigator.clipboard.writeText(text).then(() => {
-        alert("Copied to clipboard!");
+        showMessage("Copied new CSS to clipboard!");
     });
 }
 
@@ -28,7 +32,7 @@ document.addEventListener("keydown", async (event) => {
             const prettified = await window.electron.prettify(event.target.value, options);
             copyToClipboard(prettified);
         } catch (error) {
-            alert(`Error prettifying CSS: ${error.message}`);
+            showMessage(`Error prettifying CSS: ${error.message}`);
         }
     }
 });
@@ -39,9 +43,9 @@ fileSelectBtn.addEventListener("click", async () => {
         const result = await window.electron.prettifyFile(options);
 
         if (result) {
-            alert(`Prettified file saved to: ${result}`);
+            showMessage(`Edited CSS file saved to: \n ${result}`);
         }
     } catch (error) {
-        alert(`Error selecting or processing file: ${error.message}`);
+        showMessage(`Error selecting or processing file: ${error.message}`);
     }
 });

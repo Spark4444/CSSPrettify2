@@ -9,28 +9,39 @@
 </head>
 <body>
   <div class="wrap">
-    <h2>Note that this prettifier removes all comments from your CSS.</h2>
-    <h2>(You can drop your CSS files anywhere on this window)</h2>
-
-    <button id="fileSelectBtn" class="fileSelectButton">Select a CSS file</button>
-
-    <h2>OR</h2>
-
-    <input type="text" id="cssInput" placeholder="Paste your CSS here"/>
-
-    <div class="checkBoxWrap">
-        <input type="checkbox" id="checkbox1" checked/>
-        <label for="checkbox1">Sort attribute names in alphabetical order</label>
+    <div class="topTextWrap">
+      <h2>Note that this prettifier removes all comments from your CSS.</h2>
+      <h2>It might also break your css if you have your styles in certain order.</h2>
+      <h2>(You can drop your CSS files anywhere on this window)</h2>
     </div>
 
-    <div class="checkBoxWrap">
-        <input type="checkbox" id="checkbox2" checked/>
-        <label for="checkbox2">Sort selector names in alphabetical order</label>
+    <div class="middleWrap">
+        <button id="fileSelectBtn" class="fileSelectButton">Select a CSS file</button>
+
+        <h2>OR</h2>
+
+        <input type="text" id="cssInput" placeholder="Paste your CSS here"/>
     </div>
 
-    <div class="checkBoxWrap">
-        <input type="checkbox" id="checkbox3"  checked/>
-        <label for="checkbox3">Merge repeated rules</label>
+    <div class="bottomWrap">
+      <div class="checkWrap">
+        <div class="checkBoxWrap">
+            <input type="checkbox" id="checkbox1" checked/>
+            <label for="checkbox1">Sort attribute names in alphabetical order</label>
+        </div>
+
+        <div class="checkBoxWrap">
+            <input type="checkbox" id="checkbox2" checked/>
+            <label for="checkbox2">Sort selector names in alphabetical order</label>
+        </div>
+
+        <div class="checkBoxWrap">
+            <input type="checkbox" id="checkbox3"  checked/>
+            <label for="checkbox3">Merge repeated rules</label>
+        </div>
+      </div>
+
+      <div class="resultMessage"></div>
     </div>
   </div>
   <script src="js/script.js"></script>
