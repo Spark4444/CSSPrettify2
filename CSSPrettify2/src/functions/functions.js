@@ -92,10 +92,10 @@ export function filterCSS(json, options = {}) {
             const count = countSelectors[0];
             const selectors = countSelectors[1];
 
-            if (count > 2) {
+            if (count > 1) {
 
                 // Add the new property to the coma seperated selector combination if it exists or doesn't
-                const joinedSelectors = selectors.join(", ")
+                const joinedSelectors = selectors.join(", ");
                 const oldValue = newMergedObjects[joinedSelectors];
                 // Split on the first colon to allow colons inside values (e.g. data URLs)
                 const colonIndex = propertyValue.indexOf(":");
