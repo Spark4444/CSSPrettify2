@@ -86,15 +86,31 @@ export function filterCSS(json, options = {}) {
             });
         });
 
-        const newMergedObjects = {};
+        // {
+        //     "color:red": [3, [".class1", ".class2", ".class3"]],
+        //     "margin: 0": [2, [".class1", ".class4"]],
+        //     ...
+        // }
+        let newMergedObjects = {};
+
+        let selectorRepeatCount = {};
+
+        // Count how many times each selector combination appears
+        Object.entries(propertyValueRepeatCount).forEach(([propertyValue, countSelectors]) => {
+            const count = countSelectors[0];
+            const selectors = countSelectors[1];
+
+            
+            selectorRepeatCount[selectors.join(", ")] = (selectorRepeatCount[selectors.join(", ")] || 0) + count;
+        });
 
         Object.entries(propertyValueRepeatCount).forEach(([propertyValue, countSelectors]) => {
             const count = countSelectors[0];
             const selectors = countSelectors[1];
 
-            if (count > 1) {
+            if (count > 2 || selectorRepeatCount[selectors.join(", ")] > 2) {
 
-                // Add the new property to the coma seperated selector combination if it exists or doesn't
+                // Add the new property to the coma separated selector combination if it exists or doesn't
                 const joinedSelectors = selectors.join(", ");
                 const oldValue = newMergedObjects[joinedSelectors];
                 // Split on the first colon to allow colons inside values (e.g. data URLs)
