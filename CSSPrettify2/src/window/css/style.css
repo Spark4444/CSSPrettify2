@@ -59,7 +59,7 @@ body {
 .fileSelectButton {
     align-items: center;
     background: black;
-    border: 0.3vw solid white;
+    border: 0.2vw solid white;
     color: white;
     cursor: pointer;
     display: flex;
