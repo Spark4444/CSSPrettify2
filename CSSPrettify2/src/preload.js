@@ -4,5 +4,6 @@ const { contextBridge, ipcRenderer } = require("electron");
 // we'll expose IPC methods to communicate with the main process
 contextBridge.exposeInMainWorld("electron", {
     prettify: (css, options) => ipcRenderer.invoke("prettify", css, options),
-    prettifyFile: (filePath, options) => ipcRenderer.invoke("prettifyFile", options),
+    // main shows the file dialog, so only send options to the main handler
+    prettifyFile: (options) => ipcRenderer.invoke("prettifyFile", options),
 });

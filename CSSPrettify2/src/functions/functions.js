@@ -61,74 +61,55 @@ export function filterCSS(json, options = {}) {
     // So 2 min rules with 2 min elements can be merged
     // Or 1 min rule with 3 min elements can be merged
     if (mergeDuplicates) {
-        let propertyValueRepeatCount = {};
+        // Use a Map to track how often each "property:value" pair appears and which selectors contain it
+        const propertyValueRepeatCount = new Map();
 
         // Go through all selectors and count how many times each property:value repeats
-        json.forEach(element => {
-            const selector = Object.keys(element)[0];
-            const attributes = element[selector];
+        json.forEach(rule => {
+            const selector = Object.keys(rule)[0];
+            const attributes = rule[selector];
+            if (!Array.isArray(attributes)) return;
 
-            attributes.forEach(element => {
-                const property = Object.keys(element)[0];
-                const value = element[property];
-                const oldValue = propertyValueRepeatCount[`${property}:${value}`];
-                if (oldValue) {
-                    const count = oldValue[0] + 1;
-                    const selectors = oldValue[1];
+            attributes.forEach(propObj => {
+                const property = Object.keys(propObj)[0];
+                const value = propObj[property];
+                const key = `${property}:${value}`;
+
+                if (propertyValueRepeatCount.has(key)) {
+                    const [count, selectors] = propertyValueRepeatCount.get(key);
                     selectors.push(selector);
-                    propertyValueRepeatCount[`${property}:${value}`] = [count, selectors];
-                }
-                else {
-                    const count = 1;
-                    const selectors = [selector];
-                    propertyValueRepeatCount[`${property}:${value}`] = [count, selectors];
+                    propertyValueRepeatCount.set(key, [count + 1, selectors]);
+                } else {
+                    propertyValueRepeatCount.set(key, [1, [selector]]);
                 }
             });
         });
 
-        // {
-        //     "color:red": [3, [".class1", ".class2", ".class3"]],
-        //     "margin: 0": [2, [".class1", ".class4"]],
-        //     ...
-        // }
-        let newMergedObjects = {};
+        // newMergedObjects will hold combined rules keyed by a comma-separated selector list
+        const newMergedObjects = {};
 
-        let selectorRepeatCount = {};
+        // Count how many times each selector-combination appears across all property:value pairs
+        const selectorRepeatCount = new Map();
+        for (const [propertyValue, [count, selectors]] of propertyValueRepeatCount.entries()) {
+            const joined = selectors.join(", ");
+            selectorRepeatCount.set(joined, (selectorRepeatCount.get(joined) || 0) + count);
+        }
 
-        // Count how many times each selector combination appears
-        Object.entries(propertyValueRepeatCount).forEach(([propertyValue, countSelectors]) => {
-            const count = countSelectors[0];
-            const selectors = countSelectors[1];
-
-            
-            selectorRepeatCount[selectors.join(", ")] = (selectorRepeatCount[selectors.join(", ")] || 0) + count;
-        });
-
-        Object.entries(propertyValueRepeatCount).forEach(([propertyValue, countSelectors]) => {
-            const count = countSelectors[0];
-            const selectors = countSelectors[1];
-
-            if (count > 2 || selectorRepeatCount[selectors.join(", ")] > 2) {
-
-                // Add the new property to the coma separated selector combination if it exists or doesn't
+        // Determine which property:value pairs should be merged and remove them from their original selectors
+        for (const [propertyValue, [count, selectors]] of propertyValueRepeatCount.entries()) {
+            if (count > 2 || selectorRepeatCount.get(selectors.join(", ")) > 2) {
                 const joinedSelectors = selectors.join(", ");
-                const oldValue = newMergedObjects[joinedSelectors];
+
                 // Split on the first colon to allow colons inside values (e.g. data URLs)
                 const colonIndex = propertyValue.indexOf(":");
                 const property = propertyValue.slice(0, colonIndex).trim();
                 const value = propertyValue.slice(colonIndex + 1).trim();
 
-                if (oldValue) {
-                    newMergedObjects[joinedSelectors][property] = value;
-                }
-                else {
-                    newMergedObjects[joinedSelectors] = {};
-                    newMergedObjects[joinedSelectors][property] = value;
-                }
+                if (!newMergedObjects[joinedSelectors]) newMergedObjects[joinedSelectors] = {};
+                newMergedObjects[joinedSelectors][property] = value;
 
                 // Remove the property from old selectors
                 selectors.forEach(selectorName => {
-                    // Find the index of the selector object inside the json array
                     const idx = json.findIndex(item => Object.keys(item)[0] === selectorName);
                     if (idx === -1) return;
 
@@ -136,18 +117,12 @@ export function filterCSS(json, options = {}) {
                     if (!Array.isArray(currentAttrs)) return;
 
                     // Keep all property objects except the exact property:value pair we're removing
-                    const filteredAttrs = [];
-                    currentAttrs.forEach(propObj => {
+                    const filteredAttrs = currentAttrs.filter(propObj => {
                         const propKey = Object.keys(propObj)[0];
                         const propVal = propObj[propKey];
-
-                        // Remove only when both property name and value match exactly
-                        if (!(propKey === property && String(propVal) === String(value))) {
-                            filteredAttrs.push({ [propKey]: propVal });
-                        }
+                        return !(propKey === property && String(propVal) === String(value));
                     });
 
-                    // Replace the attributes array for this selector with the filtered array
                     if (filteredAttrs.length === 0) {
                         // If no attributes remain for this selector, remove the selector entry entirely
                         json.splice(idx, 1);
@@ -155,22 +130,15 @@ export function filterCSS(json, options = {}) {
                         json[idx][selectorName] = filteredAttrs;
                     }
                 });
-
             }
-        });
+        }
 
-        // Add the new data
+        // Add the new merged selectors back into the json array
         Object.entries(newMergedObjects).forEach(([key, value]) => {
-            let newObject = {
-            }
-            newObject[key] = [];
+            const newObject = { [key]: [], children: [] };
             Object.entries(value).forEach(([option, optionV]) => {
-                let objectToPush = {};
-                objectToPush[option] = optionV;
-                newObject[key].push(objectToPush);
+                newObject[key].push({ [option]: optionV });
             });
-            newObject["children"] = [];
-
             json.push(newObject);
         });
     }

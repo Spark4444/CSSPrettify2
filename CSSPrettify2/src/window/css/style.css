@@ -122,6 +122,7 @@ input[type="checkbox"]:checked {
     justify-content: center;
     width: 100%;
     user-select: text;
+    opacity: 1;
 }
 
 .topTextWrap {
