@@ -2,7 +2,7 @@ import { app, BrowserWindow, Menu, ipcMain, dialog } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
 import squirrelStartup from "electron-squirrel-startup";
-import CSSPrettify from "./functions/CSSPrettify.js";
+import { prettify, prettifyFile } from "./js/CSSPrettify.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -44,7 +44,7 @@ const createWindow = () => {
 // IPC handlers for CSS prettification
 ipcMain.handle("prettify", async (event, css, options) => {
   try {
-    return CSSPrettify.prettify(css, options);
+    return prettify(css, options);
   } catch (error) {
     throw new Error(`Failed to prettify CSS: ${error.message}`);
   }
@@ -68,7 +68,7 @@ ipcMain.handle("prettifyFile", async (event, options) => {
     
     // If a file was selected, prettify it
     if (!result.canceled && result.filePaths.length > 0) {
-      const cssResult = CSSPrettify.prettifyFile(result.filePaths[0], options);
+      const cssResult = prettifyFile(result.filePaths[0], options);
       return cssResult;
     }
 
