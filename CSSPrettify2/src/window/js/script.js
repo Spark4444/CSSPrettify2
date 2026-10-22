@@ -32,8 +32,8 @@ function showMessage(msg) {
         ],
         {
             duration: 3000,
-            easing: 'ease-in-out',
-            fill: 'forwards'
+            easing: "ease-in-out",
+            fill: "forwards"
         }
     );
 

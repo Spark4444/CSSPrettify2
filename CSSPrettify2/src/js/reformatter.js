@@ -24,7 +24,13 @@ export default function reformatCSS(json) {
 
         const attrArray = [];
         for (const prop in attributes) {
-            attrArray.push({ [prop]: attributes[prop] });
+            const value = attributes[prop];
+            // If the value is an array, take the last value (to handle duplicates), just like real CSS would do
+            if (Array.isArray(value)) {
+                attrArray.push({ [prop]: value[value.length - 1] });
+            } else {
+                attrArray.push({ [prop]: value });
+            }
         }
 
         const childrenArray = [];
