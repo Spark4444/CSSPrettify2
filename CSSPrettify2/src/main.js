@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, ipcMain, dialog } from "electron";
+import { app, BrowserWindow, Menu, ipcMain, dialog, utilityProcess } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
 import squirrelStartup from "electron-squirrel-startup";
@@ -80,6 +80,14 @@ ipcMain.handle("prettifyFile", async (event, options) => {
     dialogWindowOpen = false;
   }
 }); 
+
+ipcMain.handle("dropFile", async (event, filePath, options) => {
+  try {
+    return prettifyFile(filePath, options);
+  } catch (error) {
+    throw new Error(`Failed to prettify dropped file: ${error.message}`);
+  }
+});
 
 app.whenReady().then(() => {
   createWindow();

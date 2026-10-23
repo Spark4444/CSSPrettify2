@@ -2,6 +2,10 @@ const checkboxes = document.querySelectorAll("input[type=checkbox]");
 const cssInput = document.querySelector("#cssInput");
 const fileSelectBtn = document.querySelector("#fileSelectBtn");
 const resultMessage = document.querySelector(".resultMessage");
+const drop = document.querySelector(".drop");
+const body = document.body;
+
+let dragTTimeout;
 
 let optionsMap = [
     [ "sortSelectors", true ],
@@ -44,12 +48,14 @@ function showMessage(msg) {
     };
 }
 
+// Copy to clipboard function?
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
         showMessage("Copied new CSS to clipboard!");
     });
 }
 
+// Event listeners for checkboxes
 checkboxes.forEach((element, index) => {
     element.addEventListener("change", (event) => {
         optionsMap[index][1] = event.target.checked;
@@ -78,5 +84,38 @@ fileSelectBtn.addEventListener("click", async () => {
         }
     } catch (error) {
         showMessage(`Error selecting or processing file: ${error.message}`);
+    }
+});
+
+// Drag and drop functionality
+body.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    drop.style.display = "";
+
+    // Timeout to hide the drop area after 500ms of no dragover events, if the event doesnt refire
+    // My implementation idea from "MinimalisticNewTab" btw
+    clearTimeout(dragTTimeout);
+    dragTTimeout = setTimeout(() => {
+        drop.style.display = "none";
+    }, 500);
+});
+
+// Drop
+body.addEventListener("drop", async (event) => {
+    event.preventDefault();
+    drop.style.display = "none";
+
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        try {
+            const options = Object.fromEntries(optionsMap);
+            const result = await window.electron.dropFile(files[0], options);
+            
+            if (result) {
+                showMessage(`Edited CSS file saved to: \n ${result}`);
+            }
+        } catch (error) {
+            showMessage(`Error processing dropped file: ${error.message}`);
+        }
     }
 });
