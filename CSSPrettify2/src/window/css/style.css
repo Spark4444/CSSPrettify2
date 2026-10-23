@@ -1,82 +1,84 @@
 body {
-    align-items: center;
-    background: black;
     box-sizing: border-box;
-    color: white;
-    display: flex;
-    flex-direction: column;
     font-family: helvetica;
-    font-size: 1.5vw;
     justify-content: flex-start;
     margin: 0;
     min-height: max-content;
     overflow-y: scroll;
     padding: 0;
-    text-align: center;
     user-select: none;
+}
+
+body, .bottomWrap, .checkBoxWrap, .checkWrap, .fileSelectButton, .middleWrap, .resultMessage, .topTextWrap, .wrap, .drop {
+    align-items: center;
+    display: flex;
+}
+
+body, .bottomWrap, .checkWrap, html, .middleWrap, .resultMessage, .topTextWrap, .wrap, .drop {
     width: 100%;
+}
+
+body, .bottomWrap, .checkWrap, .middleWrap, .topTextWrap, .wrap {
+    flex-direction: column;
+}
+
+body, #cssInput, #cssInput::placeholder {
+    text-align: center;
+}
+
+body, #cssInput, .fileSelectButton {
+    color: white;
+    font-size: 1.5vw;
+}
+
+body, #cssInput, .fileSelectButton, input[type="checkbox"], .drop {
+    background: black;
 }
 
 .bottomWrap {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
     height: 20%;
+}
+
+.bottomWrap, .checkBoxWrap, .middleWrap, .wrap {
     justify-content: space-between;
-    width: 100%;
 }
 
 .checkBoxWrap {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
     width: 31%;
 }
 
-.checkWrap {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
+.checkWrap, .fileSelectButton, .resultMessage, .topTextWrap, .drop {
     justify-content: center;
-    width: 100%;
 }
 
 #cssInput {
-    background: black;
     border: none;
-    color: white;
-    font-size: 1.5vw;
     outline: none;
     width: 40%;
-    text-align: center;
 }
 
 #cssInput::placeholder {
     color: gray;
-    text-align: center;
+}
+
+.drop {
+    font-size: 3vw;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
 }
 
 .fileSelectButton {
-    align-items: center;
-    background: black;
     border: 0.2vw solid white;
-    color: white;
     cursor: pointer;
-    display: flex;
     font-family: helvetica;
-    font-size: 1.5vw;
     height: 3.5vw;
-    justify-content: center;
     transition: 0.3s;
     width: 15%;
 }
 
-.fileSelectButton:active {
-    background: white;
-    color: black;
-}
-
-.fileSelectButton:hover {
+.fileSelectButton:active, .fileSelectButton:hover {
     background: white;
     color: black;
 }
@@ -88,12 +90,10 @@ h2 {
 
 html {
     min-height: max-content;
-    width: 100%;
 }
 
 input[type="checkbox"] {
     appearance: none;
-    background: black;
     border: 0.1vw solid white;
     cursor: pointer;
     height: 1.5vw;
@@ -107,57 +107,23 @@ input[type="checkbox"]:checked {
 }
 
 .middleWrap {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
     height: 26%;
-    justify-content: space-between;
-    width: 100%;
 }
 
 .resultMessage {
-    align-items: center;
-    display: flex;
     height: 30%;
-    justify-content: center;
-    width: 100%;
-    user-select: text;
     opacity: 1;
 }
 
-.topTextWrap {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    height: 20%;
-    justify-content: center;
-    width: 100%;
+.resultMessage, .topTextWrap, label {
     user-select: text;
+}
+
+.topTextWrap {
+    height: 20%;
 }
 
 .wrap {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
     height: 100vh;
-    justify-content: space-between;
     min-height: 50vw;
-    width: 100%;
-}
-
-label {
-    user-select: text;
-}
-
-.drop {
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: black;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3vw;
 }

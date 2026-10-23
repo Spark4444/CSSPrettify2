@@ -1,1 +1,1 @@
-1. add dropping of files
+1. optimize the animations
