@@ -45,20 +45,23 @@ function showDrop() {
 function hideDrop() {
     if (!animationCanBeCalled) {
         animationCanBeCalled = true;
-        // Cancel any running animation so new messages restart the animation
+        // Get current opacity from running animation or computed style
+        let startOpacity = 1;
         if (dropAnimation) {
+            const computedOpacity = window.getComputedStyle(drop).opacity;
+            startOpacity = parseFloat(computedOpacity);
             dropAnimation.cancel();
             dropAnimation = null;
         }
 
-        // Ensure starting opacity is 1 before animating
+        // Ensure starting opacity before animating
         drop.style.display = "";
-        drop.style.opacity = 1;
+        drop.style.opacity = startOpacity;
 
-        // Animate: 1 -> 0 over 1000ms
+        // Animate: current opacity -> 0 over 1000ms
         dropAnimation = drop.animate(
             [
-                { opacity: 1, offset: 0 },
+                { opacity: startOpacity, offset: 0 },
                 { opacity: 0, offset: 1 },
             ],
             {
