@@ -28,18 +28,15 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "window/index.html"));
 
+  // Remove default menu bar (File/Edit/View/Window/Help)
+  mainWindow.setAutoHideMenuBar(true);
+  mainWindow.setMenuBarVisibility(false);
+  Menu.setApplicationMenu(null);
+
   // Comment when packaging
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
   mainWindow.maximize();
 };
-
-// Remove menu bar
-// const template = [
-
-// ];
-
-// const menu = Menu.buildFromTemplate(template);
-// Menu.setApplicationMenu(menu);
 
 // IPC handlers for CSS prettification
 ipcMain.handle("prettify", async (event, css, options) => {
