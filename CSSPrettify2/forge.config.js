@@ -4,10 +4,28 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses';
 export default {
   packagerConfig: {
     asar: true,
-    icon: process.platform === 'darwin' ? './src/img/app.icns' : './src/img/app.ico',
+    icon: process.platform === 'darwin' ? './src/img/app.icns' : './src/img/app',
   },
   rebuildConfig: {},
   makers: [
+    {
+      name: '@rabbitholesyndrome/electron-forge-maker-portable',
+      platforms: ['win32'],
+      config: {
+        appId: 'com.spark4444.cssprettify2',
+        directories: {
+          buildResources: './src/img',
+        },
+        win: {
+          icon: 'app.ico',
+        },
+        nsis: {
+          installerIcon: 'app.ico',
+          uninstallerIcon: 'app.ico',
+          installerHeaderIcon: 'app.ico',
+        },
+      },
+    },
     {
       name: '@electron-forge/maker-squirrel',
       config: {

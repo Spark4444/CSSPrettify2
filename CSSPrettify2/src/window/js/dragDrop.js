@@ -28,7 +28,7 @@ function showDrop() {
           { opacity: 1, offset: 1 },
         ],
         {
-          duration: 1000,
+          duration: 500,
           easing: "ease-in-out",
           fill: "forwards",
         },
@@ -58,14 +58,14 @@ function hideDrop() {
         drop.style.display = "";
         drop.style.opacity = startOpacity;
 
-        // Animate: current opacity -> 0 over 1000ms
+        // Animate: current opacity -> 0 over 500ms
         dropAnimation = drop.animate(
             [
                 { opacity: startOpacity, offset: 0 },
                 { opacity: 0, offset: 1 },
             ],
             {
-                duration: 1000,
+                duration: 500,
                 easing: "ease-in-out",
                 fill: "forwards"
             }
@@ -83,6 +83,12 @@ function hideDrop() {
 // Drag and drop event listeners
 body.addEventListener("dragover", (event) => {
     event.preventDefault();
+    // check if the dragged item is a css file
+    const items = event.dataTransfer.items;
+    if (items.length > 0 && !items[0].type.includes("css")) {
+        return;
+    }
+
     showDrop();
 
     // Timeout to hide the drop area after 500ms of no dragover events, if the event doesnt refire
@@ -101,6 +107,11 @@ body.addEventListener("drop", async (event) => {
     const files = event.dataTransfer.files;
     if (files.length > 0) {
         try {
+            // Check if the file is css extension
+            if (!files[0].type.includes("css")) {
+                return;
+            }
+
             const options = Object.fromEntries(optionsMap);
             const result = await window.electron.dropFile(files[0], options);
             
