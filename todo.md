@@ -1,1 +1,0 @@
-1. optimize the animations
