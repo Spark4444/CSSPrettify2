@@ -13,7 +13,7 @@ function showMessage(msg) {
 
   resultMessage.style.opacity = startOpacity;
 
-  // Animate: current opacity -> 1 -> 0 over 3000ms
+  // Animate: current opacity -> 1 -> 0 over 2500ms
   messageAnimation = resultMessage.animate(
     [
       { opacity: startOpacity, offset: 0 },
@@ -21,7 +21,7 @@ function showMessage(msg) {
       { opacity: 0, offset: 1 },
     ],
     {
-      duration: 3000,
+      duration: 2500,
       easing: "ease-in-out",
       fill: "forwards",
     },
